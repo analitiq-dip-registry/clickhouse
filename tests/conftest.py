@@ -12,8 +12,10 @@ for _mod in ("cdk", "cdk.sql", "cdk.sql.dialects", "cdk.sql.generic"):
         sys.modules[_mod] = MagicMock()
 
 _dialects = sys.modules["cdk.sql.dialects"]
-_dialects.SqlDialect = type("SqlDialect", (), {"name": ""})
-_dialects.TableAddress = str
+if isinstance(_dialects, MagicMock):
+    _dialects.SqlDialect = type("SqlDialect", (), {"name": ""})
+    _dialects.TableAddress = str
 
 _generic = sys.modules["cdk.sql.generic"]
-_generic.GenericSQLConnector = type("GenericSQLConnector", (), {})
+if isinstance(_generic, MagicMock):
+    _generic.GenericSQLConnector = type("GenericSQLConnector", (), {})

@@ -6,10 +6,12 @@
 clickhouse-sqlalchemy>=0.3.0
 
 # Async ClickHouse DBAPI over the native TCP protocol - the `asynch` half
-# of `clickhouse+asynch`. `secure` and `verify` are direct named parameters
-# of asynch.proto.connection.Connection (confirmed in 0.2.4 source and 0.3.x
-# source; neither is delegated through **kwargs). Floor verified against PyPI:
-# 0.2.4 is the earliest patch where both TLS kwargs are confirmed present; the
-# 0.3.x line is also compatible. Also drives the columnar block insert that
-# makes executemany the connector's bulk path.
+# of `clickhouse+asynch`. `secure` and `verify` are named parameters on
+# asynch.proto.connection.Connection (confirmed in 0.2.4 source and 0.3.x
+# source). The DBAPI wrapper (asynch.connection.Connection) passes them via
+# **kwargs to the proto layer, which consumes them by name. Both layers accept
+# unknown kwargs silently; the guarantee is that these are the exact expected
+# key names at the proto layer, verified against source. Floor verified against
+# PyPI: 0.2.4 is the earliest patch confirmed; 0.3.x is also compatible.
+# Also drives the columnar block insert that makes executemany the bulk path.
 asynch>=0.2.4

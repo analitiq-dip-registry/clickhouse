@@ -192,18 +192,21 @@ class ClickHouseDialect(SqlDialect):
         This overrides the plural hook rather than the singular
         ``build_tls_connect_arg`` because the driver does not take its TLS
         configuration through one argument: ``asynch`` is its own native
-        TCP protocol implementation (not a clickhouse-driver wrapper) and
-        exposes ``secure`` and ``verify`` as direct named parameters on
+        TCP protocol implementation (not a clickhouse-driver wrapper).
+        ``secure`` and ``verify`` are named parameters on
         ``asynch.proto.connection.Connection`` - verified against asynch
         0.2.4+ and 0.3.x source. ``secure`` decides whether a TLS handshake
         happens at all and ``verify`` decides whether the server's
-        certificate chain and host name are checked. Both are named
-        parameters, not ``**kwargs`` pass-throughs, so there is no risk of
-        silent key mismatch.
+        certificate chain and host name are checked. The DBAPI wrapper
+        (``asynch.connection.Connection``) forwards kwargs to the proto
+        layer via ``**kwargs``; both layers accept unknown kwargs silently,
+        so the safety guarantee is that these are the *exact expected key
+        names* at the proto layer, confirmed against source.
 
         The declared enum maps one-to-one onto those two switches:
 
-        * ``disable``     -> ``secure=False``: plaintext native protocol.
+        * ``disable``     -> ``secure=False``: plaintext native protocol (no
+          ``verify`` key — TLS is off, so certificate checking is moot).
         * ``require``     -> ``secure=True, verify=False``: encrypted, no
           certificate verification (the mode's documented meaning; a
           connection this mode accepts is trivially MITM-able and it
