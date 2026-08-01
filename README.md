@@ -59,7 +59,7 @@ The table below lists all data endpoints defined by this connector. Each endpoin
 
 ## Limitations
 
-- **Destination writes require the target table to already exist.** ClickHouse's `CREATE TABLE` is invalid without an `ENGINE` clause. The connector supplies one for its own stage table, but the *target* table's DDL is rendered by the CDK, which has no sanctioned dialect hook for table options. Pointing a stream at a target table that does not already exist fails with `Engine must be specified`. Pre-create the destination table with the appropriate engine, sorting key, and partitioning before writing. A core-side fix is tracked in [issue #3](https://github.com/analitiq-dip-registry/clickhouse/issues/3).
+- **Destination writes require the target table to already exist.** ClickHouse's `CREATE TABLE` is invalid without an `ENGINE` clause. The connector supplies one for its own stage table, but the *target* table's DDL is rendered by the Analitiq CDK, which has no sanctioned dialect hook for table options. Pointing a stream at a target table that does not already exist fails with `Engine must be specified`. Pre-create the destination table with the appropriate engine and sorting key (PARTITION BY is optional); `ENGINE = MergeTree ORDER BY tuple()` is a safe starting point if you have no specific requirements. A core-side fix is tracked in [issue #3](https://github.com/analitiq-dip-registry/clickhouse/issues/3).
 
 ## For AI agents
 
