@@ -34,7 +34,7 @@ The `analitiq-plugin-dataflow` plugin will automatically fetch the required conn
 - A running ClickHouse server, or a ClickHouse Cloud service
 - Network access from the Analitiq platform to the server's **native TCP protocol** listener -- port 9440 for TLS, port 9000 for plaintext. This connector does not use the HTTP interface (8123 / 8443).
 - A ClickHouse user with a password, holding `SELECT` on the databases you want to read
-- For destination use, additionally `INSERT`, `CREATE TABLE`, `DROP TABLE` and `TRUNCATE` on the target database -- and a target table that already exists (see [Limitations](#limitations))
+- For destination use, additionally `INSERT`, `CREATE TABLE`, `DROP TABLE` and `ALTER DELETE` on the target database -- and a target table that already exists (see [Limitations](#limitations))
 
 ## Authentication
 
@@ -59,7 +59,7 @@ A password is required. A stock server's passwordless `default` user is not a su
    ```
 4. If ClickHouse is also a **destination**, grant the privileges the write cycle needs:
    ```sql
-   GRANT INSERT, CREATE TABLE, DROP TABLE, TRUNCATE ON analytics.* TO analitiq;
+   GRANT INSERT, CREATE TABLE, DROP TABLE, ALTER DELETE ON analytics.* TO analitiq;
    ```
 5. Note the host, the native port (9440 with TLS, 9000 without), the database name (`default` on a stock server), the username and the password
 

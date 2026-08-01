@@ -2,8 +2,9 @@
 
 Everything ClickHouse-specific lives here: backtick quoting, the
 stage-then-apply write hooks (``CREATE TABLE ... AS <target> ENGINE =
-MergeTree ORDER BY tuple()`` for the stage, ``TRUNCATE TABLE`` for the
-truncate-insert reset) and the ``asynch`` two-switch TLS surface. Column
+MergeTree ORDER BY tuple()`` for the stage, a lightweight ``DELETE FROM
+... WHERE 1=1`` for the truncate-insert reset) and the ``asynch``
+two-switch TLS surface. Column
 types for the write direction are governed entirely by
 ``definition/type-map-write.json``; this module ships no Python
 type-rendering table.
@@ -164,17 +165,31 @@ class ClickHouseDialect(SqlDialect):
         """Empty *target* before a truncate-insert's first batch.
 
         The ANSI base renders a bare ``DELETE FROM t``, which ClickHouse
-        rejects: its ``DELETE FROM`` is a lightweight *mutation* and the
-        grammar requires a ``WHERE``. ``TRUNCATE TABLE`` is ClickHouse's
-        own empty-all statement, and it is the right one here for a second
-        reason - a ``DELETE FROM t WHERE 1`` would only mark rows deleted
-        and schedule a mutation, leaving the reset's completion
-        asynchronous with respect to the append that follows it.
-        ``TRUNCATE``'s implicit commit costs nothing, because the
-        connector already declares ``stage.transactional_ddl: false``:
-        there is no enclosing transaction for it to break.
+        rejects outright: its ``DELETE FROM`` is a lightweight delete and
+        the grammar requires a ``WHERE``. Hence the explicit ``WHERE 1=1``.
+
+        ``TRUNCATE TABLE`` is ClickHouse's own empty-all statement and
+        would read as the natural choice here, but the CDK tier-1
+        conformance kit rejects any emptying statement containing
+        ``TRUNCATE`` (``test_empty_table_statement_is_delete_shaped``)
+        because ``TRUNCATE`` implicitly commits on several systems and
+        would break the declared single-transaction stage cycle. That
+        check is unconditional - it does not consult
+        ``stage.transactional_ddl``, which this connector declares
+        ``false`` - so the gate applies even though ClickHouse has no
+        enclosing transaction for an implicit commit to break. Whether
+        the kit should exempt such dialects is raised separately; until
+        it does, the contract is the contract.
+
+        The lightweight delete is sound for the reset-then-append cycle:
+        it writes a ``_row_exists`` mask and the rows stop being visible
+        to subsequent reads as soon as the statement returns, so the
+        append that follows never observes pre-reset rows. Only the
+        physical part rewrite is deferred, and that is invisible to
+        correctness. This is *not* the older ``ALTER TABLE ... DELETE``
+        mutation, whose completion genuinely is asynchronous.
         """
-        return f"TRUNCATE TABLE {self.quote_table(target)}"
+        return f"DELETE FROM {self.quote_table(target)} WHERE 1=1"
 
     # No ``bulk_land``: the three mechanisms the capability vocabulary can
     # name (``copy_from``, ``load_data_local_infile``, ``load_job``) are
