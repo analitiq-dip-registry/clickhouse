@@ -59,11 +59,7 @@ The table below lists all data endpoints defined by this connector. Each endpoin
 
 ## Limitations
 
-REPLACE with any important limitations users should know about:
-
-- **Rate limits** — e.g., "The API allows 60 requests per minute"
-- **Data freshness** — e.g., "Data may be delayed by up to 15 minutes"
-- **Sandbox vs Production** — e.g., "Sandbox and production use different API keys"
+- **Destination writes require the target table to already exist.** ClickHouse's `CREATE TABLE` is invalid without an `ENGINE` clause. The connector supplies one for its own stage table, but the *target* table's DDL is rendered by the CDK, which has no sanctioned dialect hook for table options. Pointing a stream at a target table that does not already exist fails with `Engine must be specified`. Pre-create the destination table with the appropriate engine, sorting key, and partitioning before writing. A core-side fix is tracked in [issue #3](https://github.com/analitiq-dip-registry/clickhouse/issues/3).
 
 ## For AI agents
 
