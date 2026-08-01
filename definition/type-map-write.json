@@ -1,0 +1,42 @@
+[
+  { "match": "exact", "canonical": "Boolean", "native": "Bool" },
+
+  { "match": "exact", "canonical": "Int8", "native": "Int8" },
+  { "match": "exact", "canonical": "Int16", "native": "Int16" },
+  { "match": "exact", "canonical": "Int32", "native": "Int32" },
+  { "match": "exact", "canonical": "Int64", "native": "Int64" },
+  { "match": "exact", "canonical": "UInt8", "native": "UInt8" },
+  { "match": "exact", "canonical": "UInt16", "native": "UInt16" },
+  { "match": "exact", "canonical": "UInt32", "native": "UInt32" },
+  { "match": "exact", "canonical": "UInt64", "native": "UInt64" },
+
+  { "match": "exact", "canonical": "Float16", "native": "Float32" },
+  { "match": "exact", "canonical": "Float32", "native": "Float32" },
+  { "match": "exact", "canonical": "Float64", "native": "Float64" },
+
+  { "match": "regex", "canonical": "^Decimal(?:128|256)\\((?<precision>\\d+),\\s*(?<scale>\\d+)\\)$", "native": "Decimal(${precision}, ${scale})" },
+
+  { "match": "exact", "canonical": "Utf8", "native": "String" },
+  { "match": "exact", "canonical": "LargeUtf8", "native": "String" },
+  { "match": "exact", "canonical": "Null", "native": "String" },
+
+  { "match": "exact", "canonical": "Binary", "native": "String" },
+  { "match": "exact", "canonical": "LargeBinary", "native": "String" },
+  { "match": "regex", "canonical": "^FixedSizeBinary\\((?<width>\\d+)\\)$", "native": "FixedString(${width})" },
+
+  { "match": "exact", "canonical": "Date32", "native": "Date32" },
+  { "match": "exact", "canonical": "Date64", "native": "Date32" },
+
+  { "match": "regex", "canonical": "^Timestamp\\(SECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(0, 'UTC')" },
+  { "match": "regex", "canonical": "^Timestamp\\(MILLISECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(3, 'UTC')" },
+  { "match": "regex", "canonical": "^Timestamp\\(MICROSECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(6, 'UTC')" },
+  { "match": "regex", "canonical": "^Timestamp\\(NANOSECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(9, 'UTC')" },
+
+  { "match": "regex", "canonical": "^Time32\\((?:SECOND|MILLISECOND)\\)$", "native": "Int32" },
+  { "match": "regex", "canonical": "^Time64\\((?:MICROSECOND|NANOSECOND)\\)$", "native": "Int64" },
+  { "match": "regex", "canonical": "^Duration\\((?:SECOND|MILLISECOND|MICROSECOND|NANOSECOND)\\)$", "native": "Int64" },
+
+  { "match": "exact", "canonical": "Json", "native": "String" },
+  { "match": "exact", "canonical": "Object", "native": "String" },
+  { "match": "exact", "canonical": "List", "native": "String" }
+]

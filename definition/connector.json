@@ -1,43 +1,219 @@
 {
   "$schema": "https://schemas.analitiq.ai/connector/latest.json",
-  "kind": "api",
-  "display_name": "REPLACE",
-  "description": "REPLACE with a short description",
+  "kind": "database",
+  "connector_id": "clickhouse",
+  "display_name": "ClickHouse",
+  "description": "ClickHouse column-oriented OLAP database. Reads and writes over the async SQLAlchemy clickhouse+asynch transport (the clickhouse-sqlalchemy dialect on the asynch native-protocol driver): username/password authentication, a three-value ssl_mode (disable / require / verify-full) realized through the driver's secure/verify connect arguments, and schema/table/view discovery via ClickHouse's INFORMATION_SCHEMA views. ClickHouse's native protocol has no STARTTLS-style upgrade - TLS is a separate listener (9440) from the plaintext one (9000) - so ssl_mode and port must agree. Write-path facts are declared honestly rather than conveniently: ClickHouse has no MERGE, no ON CONFLICT and no ON DUPLICATE KEY, so merge_form is 'none' and upsert streams are refused at handshake instead of silently duplicating rows (row-collapsing upserts are a table-engine property - ReplacingMergeTree plus FINAL - not a statement grammar the engine can render); DDL is never transactional, so staging uses a real MergeTree table created and dropped outside any transaction. No first-class ADBC driver and no Arrow Flight SQL endpoint exist for ClickHouse, so the SQLAlchemy transport is the only supported path; batches land through the native columnar block insert the driver performs on executemany, which is why bulk_load declares no separate mechanism and why write_unit asks the coalescer for large batches (ClickHouse penalizes small, frequent inserts with part explosion).",
+  "documentation_url": "https://clickhouse.com/docs",
+  "tags": [
+    "database",
+    "clickhouse",
+    "olap",
+    "columnar",
+    "warehouse",
+    "sql",
+    "sqlalchemy"
+  ],
   "version": "0.0.0",
-  "default_transport": "api",
+  "default_transport": "database",
   "transports": {
-    "api": {
-      "transport_type": "http",
-      "base_url": "https://api.example.com/v1/",
-      "headers": {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": { "template": "Bearer ${secrets.api_key}" }
+    "database": {
+      "transport_type": "sqlalchemy",
+      "driver": "clickhouse+asynch",
+      "dsn": {
+        "kind": "url_template",
+        "template": "clickhouse+asynch://{username}:{password}@{host}:{port}/{database}",
+        "bindings": {
+          "username": {
+            "value": {
+              "ref": "connection.parameters.username"
+            },
+            "encoding": "url_userinfo"
+          },
+          "password": {
+            "value": {
+              "ref": "secrets.password"
+            },
+            "encoding": "url_userinfo"
+          },
+          "host": {
+            "value": {
+              "ref": "connection.parameters.host"
+            },
+            "encoding": "host"
+          },
+          "port": {
+            "value": {
+              "ref": "connection.parameters.port"
+            },
+            "encoding": "raw"
+          },
+          "database": {
+            "value": {
+              "ref": "connection.parameters.database"
+            },
+            "encoding": "url_path_segment"
+          }
+        }
       },
-      "timeout_seconds": 30,
-      "rate_limit": {
-        "max_requests": 60,
-        "time_window_seconds": 60
+      "tls": {
+        "mode": {
+          "ref": "connection.parameters.ssl_mode"
+        }
       }
     }
   },
   "auth": {
-    "type": "api_key"
+    "type": "db"
   },
   "connection_contract": {
     "inputs": {
-      "api_key": {
+      "host": {
         "source": "user",
         "phase": "pre_auth",
+        "storage": "connection.parameters",
+        "type": "string",
+        "required": true,
+        "ui": {
+          "label": "Host",
+          "widget": "text",
+          "placeholder": "e.g. abc123.eu-central-1.aws.clickhouse.cloud or 127.0.0.1",
+          "help_text": "Hostname or IP address of the ClickHouse server. This connector speaks ClickHouse's native TCP protocol, not the HTTP interface, so give the host that serves the native listener."
+        }
+      },
+      "port": {
+        "source": "user",
+        "phase": "pre_auth",
+        "storage": "connection.parameters",
+        "type": "integer",
+        "required": true,
+        "default": 9440,
+        "ui": {
+          "label": "Port",
+          "widget": "number",
+          "help_text": "TCP port of the ClickHouse native protocol listener. ClickHouse serves plaintext on 9000 and TLS on 9440 as two separate listeners - there is no in-band upgrade - so this must agree with SSL Mode: 9440 for require/verify-full (the default), 9000 for disable."
+        }
+      },
+      "database": {
+        "source": "user",
+        "phase": "pre_auth",
+        "storage": "connection.parameters",
+        "type": "string",
+        "required": true,
+        "default": "default",
+        "ui": {
+          "label": "Database",
+          "widget": "text",
+          "placeholder": "e.g. analytics",
+          "help_text": "ClickHouse database to connect to. A ClickHouse database is the schema level - there is no catalog level above it - and 'default' is the database a stock server creates."
+        }
+      },
+      "username": {
+        "source": "user",
+        "phase": "auth",
+        "storage": "connection.parameters",
+        "type": "string",
+        "required": true,
+        "default": "default",
+        "ui": {
+          "label": "Username",
+          "widget": "text",
+          "placeholder": "e.g. analitiq",
+          "help_text": "ClickHouse user. 'default' is the user a stock server creates."
+        }
+      },
+      "password": {
+        "source": "user",
+        "phase": "auth",
         "storage": "secrets",
         "type": "string",
         "required": true,
         "secret": true,
         "ui": {
-          "label": "API Key",
-          "widget": "password"
+          "label": "Password",
+          "widget": "password",
+          "help_text": "Password for the ClickHouse user. A password is required: a stock server's passwordless 'default' user is not a supported configuration for this connector."
+        }
+      },
+      "ssl_mode": {
+        "source": "user",
+        "phase": "pre_auth",
+        "storage": "connection.parameters",
+        "type": "string",
+        "required": false,
+        "default": "verify-full",
+        "enum": [
+          "disable",
+          "require",
+          "verify-full"
+        ],
+        "ui": {
+          "label": "SSL Mode",
+          "widget": "select",
+          "help_text": "How the native-protocol connection is secured. The driver exposes TLS as a 'secure' switch plus a 'verify' switch, and its only channel for a custom CA bundle is a filesystem path, which a stored secret cannot supply - so no CA certificate input is offered and verify-full validates against the host's system trust store. Because TLS lives on its own listener, changing this usually means changing the port too.",
+          "options": [
+            {
+              "value": "disable",
+              "label": "Disable - plaintext connection (native listener, usually port 9000)"
+            },
+            {
+              "value": "require",
+              "label": "Require - encrypted, but the server certificate is not verified"
+            },
+            {
+              "value": "verify-full",
+              "label": "Verify Full - encrypted, certificate and host name verified against the system CA store (default)"
+            }
+          ]
         }
       }
+    },
+    "required_for_activation": [
+      "connection.parameters.host",
+      "connection.parameters.port",
+      "connection.parameters.database",
+      "connection.parameters.username",
+      "secrets.password"
+    ]
+  },
+  "sql_capabilities": {
+    "catalog": "none",
+    "session_targeting": "per_statement",
+    "merge_form": "none",
+    "bulk_load": {},
+    "stage": {
+      "scope": "real",
+      "schema": "target",
+      "transactional_ddl": false
+    },
+    "limits": {
+      "max_identifier_len": 127
+    }
+  },
+  "write_unit": {
+    "rows": 50000,
+    "bytes": 16777216
+  },
+  "resource_discovery": {
+    "strategy": "information_schema",
+    "transport_ref": "database",
+    "implementation": {
+      "type": "builtin"
+    },
+    "options": {
+      "exclude_schemas": [
+        "system",
+        "information_schema",
+        "INFORMATION_SCHEMA"
+      ]
+    },
+    "produces": [
+      "connection.endpoints",
+      "connection.type_map"
+    ],
+    "triggers": {
+      "list_resources": "on_activation",
+      "describe_resource": "on_resource_selected"
     }
   }
 }

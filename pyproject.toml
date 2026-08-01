@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "analitiq-connector-clickhouse"
+version = "0.0.0"
+description = "Analitiq connector for ClickHouse: dialect, driver, definition."
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools]
+packages = ["analitiq_connector_clickhouse"]
+package-dir = { "analitiq_connector_clickhouse" = "." }
+
+[project.entry-points."analitiq.source_connectors"]
+clickhouse = "analitiq_connector_clickhouse.connector:ClickHouseConnector"
+
+[project.entry-points."analitiq.destination_connectors"]
+clickhouse = "analitiq_connector_clickhouse.connector:ClickHouseConnector"
