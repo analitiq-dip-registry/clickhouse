@@ -59,11 +59,7 @@ The table below lists all data endpoints defined by this connector. Each endpoin
 
 ## Limitations
 
-REPLACE with any important limitations users should know about:
-
-- **Rate limits** — e.g., "The API allows 60 requests per minute"
-- **Data freshness** — e.g., "Data may be delayed by up to 15 minutes"
-- **Sandbox vs Production** — e.g., "Sandbox and production use different API keys"
+- **Full-refresh streams use `DELETE FROM … WHERE 1=1`, not `TRUNCATE TABLE`.** ClickHouse's `TRUNCATE TABLE` would be more efficient, but the CDK conformance check forbids any emptying statement containing `TRUNCATE`. The lightweight delete is functionally correct: rows become invisible immediately and the deferred part rewrite does not affect correctness. See [issue #9](https://github.com/analitiq-dip-registry/clickhouse/issues/9) for background.
 
 ## For AI agents
 
