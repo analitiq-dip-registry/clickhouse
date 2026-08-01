@@ -31,4 +31,4 @@ None required.
 
 ## Caveats
 
-None known.
+- **All write-path DDL columns are nullable.** `definition/type-map-write.json` wraps every native type in `Nullable(T)`. CDK-rendered target DDL therefore declares all columns nullable, even when the source column was `NOT NULL`. This is required because ClickHouse columns are `NOT NULL` by default (the inverse of ANSI SQL), and the type map carries no per-column nullability metadata. Per-column propagation (nullable source → `Nullable(T)`, non-nullable source → bare `T`) requires a CDK DDL-renderer hook that does not yet exist.
