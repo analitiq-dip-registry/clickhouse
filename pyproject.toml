@@ -21,3 +21,6 @@ clickhouse = "analitiq_connector_clickhouse.connector:ClickHouseConnector"
 
 [project.entry-points."analitiq.destination_connectors"]
 clickhouse = "analitiq_connector_clickhouse.connector:ClickHouseConnector"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

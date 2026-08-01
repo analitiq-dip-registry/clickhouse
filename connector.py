@@ -191,10 +191,15 @@ class ClickHouseDialect(SqlDialect):
 
         This overrides the plural hook rather than the singular
         ``build_tls_connect_arg`` because the driver does not take its TLS
-        configuration through one argument: ``asynch`` inherits
-        clickhouse-driver's surface, where ``secure`` decides whether a TLS
-        handshake happens at all and ``verify`` decides whether the
-        server's certificate chain and host name are checked.
+        configuration through one argument: ``asynch`` is its own native
+        TCP protocol implementation (not a clickhouse-driver wrapper) and
+        exposes ``secure`` and ``verify`` as direct named parameters on
+        ``asynch.proto.connection.Connection`` - verified against asynch
+        0.2.4+ and 0.3.x source. ``secure`` decides whether a TLS handshake
+        happens at all and ``verify`` decides whether the server's
+        certificate chain and host name are checked. Both are named
+        parameters, not ``**kwargs`` pass-throughs, so there is no risk of
+        silent key mismatch.
 
         The declared enum maps one-to-one onto those two switches:
 
