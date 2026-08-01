@@ -1,0 +1,12 @@
+# This connector's driver only. The engine image ships no database drivers
+# and provides the CDK itself, which is never listed here.
+
+# SQLAlchemy dialect for ClickHouse. Registers the `clickhouse+asynch`
+# entry point the transport names; 0.3.x is the SQLAlchemy 2.0 line.
+clickhouse-sqlalchemy>=0.3.0
+
+# Async ClickHouse DBAPI over the native TCP protocol - the `asynch` half
+# of `clickhouse+asynch`. Owns the TLS surface (`secure` / `verify`) the
+# dialect's build_tls_connect_args fills in, and the columnar block insert
+# that makes executemany the connector's bulk path.
+asynch>=0.2.4
