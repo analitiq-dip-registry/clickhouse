@@ -1,62 +1,256 @@
-[
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?BOOL\\)?\\)?$", "canonical": "Boolean" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT8\\)?\\)?$", "canonical": "Int8" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT16\\)?\\)?$", "canonical": "Int16" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT32\\)?\\)?$", "canonical": "Int32" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT64\\)?\\)?$", "canonical": "Int64" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT8\\)?\\)?$", "canonical": "UInt8" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT16\\)?\\)?$", "canonical": "UInt16" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT32\\)?\\)?$", "canonical": "UInt32" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT64\\)?\\)?$", "canonical": "UInt64" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?U?INT128\\)?\\)?$", "canonical": "Decimal256(39, 0)" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?U?INT256\\)?\\)?$", "canonical": "Utf8" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FLOAT32\\)?\\)?$", "canonical": "Float32" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FLOAT64\\)?\\)?$", "canonical": "Float64" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?BFLOAT16\\)?\\)?$", "canonical": "Float32" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL32\\((?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal128(9, ${scale})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL64\\((?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal128(18, ${scale})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL128\\((?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal128(38, ${scale})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL256\\((?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal256(76, ${scale})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL\\((?<precision>[1-9]|[12]\\d|3[0-8]),\\s*(?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal128(${precision}, ${scale})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL\\((?<precision>39|[4-6]\\d|7[0-6]),\\s*(?<scale>\\d+)\\)\\)?\\)?$", "canonical": "Decimal256(${precision}, ${scale})" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?STRING\\)?\\)?$", "canonical": "Utf8" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FIXEDSTRING\\((?<width>\\d+)\\)\\)?\\)?$", "canonical": "FixedSizeBinary(${width})" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UUID\\)?\\)?$", "canonical": "Utf8" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?IPV4\\)?\\)?$", "canonical": "Utf8" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?IPV6\\)?\\)?$", "canonical": "Utf8" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?ENUM(?:8|16)?\\(.*\\)\\)?\\)?$", "canonical": "Utf8" },
-
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATE\\)?\\)?$", "canonical": "Date32" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATE32\\)?\\)?$", "canonical": "Date32" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\(0(?:,\\s*'[^']*')?\\)\\)?\\)?$", "canonical": "Timestamp(SECOND, UTC)" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([1-3](?:,\\s*'[^']*')?\\)\\)?\\)?$", "canonical": "Timestamp(MILLISECOND, UTC)" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([4-6](?:,\\s*'[^']*')?\\)\\)?\\)?$", "canonical": "Timestamp(MICROSECOND, UTC)" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([7-9](?:,\\s*'[^']*')?\\)\\)?\\)?$", "canonical": "Timestamp(NANOSECOND, UTC)" },
-  { "match": "regex", "native": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME(?:\\('[^']*'\\))?\\)?\\)?$", "canonical": "Timestamp(SECOND, UTC)" },
-
-  { "match": "regex", "native": "^ARRAY\\(.*\\)$", "canonical": "Json" },
-  { "match": "regex", "native": "^MAP\\(.*\\)$", "canonical": "Json" },
-  { "match": "regex", "native": "^TUPLE\\(.*\\)$", "canonical": "Json" },
-  { "match": "regex", "native": "^NESTED\\(.*\\)$", "canonical": "Json" },
-  { "match": "regex", "native": "^VARIANT\\(.*\\)$", "canonical": "Json" },
-  { "match": "regex", "native": "^JSON(?:\\(.*\\))?$", "canonical": "Json" },
-  { "match": "regex", "native": "^OBJECT\\('[^']*'\\)$", "canonical": "Json" },
-  { "match": "exact", "native": "DYNAMIC", "canonical": "Json" },
-  { "match": "regex", "native": "^DYNAMIC\\(.*\\)$", "canonical": "Json" },
-
-  { "match": "exact", "native": "POINT", "canonical": "Json" },
-  { "match": "exact", "native": "RING", "canonical": "Json" },
-  { "match": "exact", "native": "LINESTRING", "canonical": "Json" },
-  { "match": "exact", "native": "MULTILINESTRING", "canonical": "Json" },
-  { "match": "exact", "native": "POLYGON", "canonical": "Json" },
-  { "match": "exact", "native": "MULTIPOLYGON", "canonical": "Json" },
-
-  { "match": "regex", "native": "^AGGREGATEFUNCTION\\(.*\\)$", "canonical": "Binary" },
-
-  { "match": "regex", "native": "^(?:NULLABLE\\()?NOTHING\\)?$", "canonical": "Null" }
-]
+{
+  "$schema": "https://schemas.analitiq.ai/type-map-read/latest.json",
+  "direction": "read",
+  "rules": [
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?BOOL\\)?\\)?$",
+      "arrow_type": "Boolean"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT8\\)?\\)?$",
+      "arrow_type": "Int8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT16\\)?\\)?$",
+      "arrow_type": "Int16"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT32\\)?\\)?$",
+      "arrow_type": "Int32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?INT64\\)?\\)?$",
+      "arrow_type": "Int64"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT8\\)?\\)?$",
+      "arrow_type": "UInt8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT16\\)?\\)?$",
+      "arrow_type": "UInt16"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT32\\)?\\)?$",
+      "arrow_type": "UInt32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UINT64\\)?\\)?$",
+      "arrow_type": "UInt64"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?U?INT128\\)?\\)?$",
+      "arrow_type": "Decimal256(39, 0)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?U?INT256\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FLOAT32\\)?\\)?$",
+      "arrow_type": "Float32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FLOAT64\\)?\\)?$",
+      "arrow_type": "Float64"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?BFLOAT16\\)?\\)?$",
+      "arrow_type": "Float32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL32\\((?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal128(9, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL64\\((?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal128(18, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL128\\((?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal128(38, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL256\\((?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal256(76, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL\\((?<precision>[1-9]|[12]\\d|3[0-8]),\\s*(?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal128(${precision}, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DECIMAL\\((?<precision>39|[4-6]\\d|7[0-6]),\\s*(?<scale>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "Decimal256(${precision}, ${scale})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?STRING\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?FIXEDSTRING\\((?<width>\\d+)\\)\\)?\\)?$",
+      "arrow_type": "FixedSizeBinary(${width})"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?UUID\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?IPV4\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?IPV6\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?ENUM(?:8|16)?\\(.*\\)\\)?\\)?$",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATE\\)?\\)?$",
+      "arrow_type": "Date32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATE32\\)?\\)?$",
+      "arrow_type": "Date32"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\(0(?:,\\s*'[^']*')?\\)\\)?\\)?$",
+      "arrow_type": "Timestamp(SECOND, UTC)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([1-3](?:,\\s*'[^']*')?\\)\\)?\\)?$",
+      "arrow_type": "Timestamp(MILLISECOND, UTC)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([4-6](?:,\\s*'[^']*')?\\)\\)?\\)?$",
+      "arrow_type": "Timestamp(MICROSECOND, UTC)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME64\\([7-9](?:,\\s*'[^']*')?\\)\\)?\\)?$",
+      "arrow_type": "Timestamp(NANOSECOND, UTC)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:LOWCARDINALITY\\()?(?:NULLABLE\\()?DATETIME(?:\\('[^']*'\\))?\\)?\\)?$",
+      "arrow_type": "Timestamp(SECOND, UTC)"
+    },
+    {
+      "match": "regex",
+      "native_type": "^ARRAY\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^MAP\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^TUPLE\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^NESTED\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^VARIANT\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^JSON(?:\\(.*\\))?$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^OBJECT\\('[^']*'\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "DYNAMIC",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^DYNAMIC\\(.*\\)$",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "POINT",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "RING",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "LINESTRING",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "MULTILINESTRING",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "POLYGON",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "MULTIPOLYGON",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "regex",
+      "native_type": "^AGGREGATEFUNCTION\\(.*\\)$",
+      "arrow_type": "Binary"
+    },
+    {
+      "match": "regex",
+      "native_type": "^(?:NULLABLE\\()?NOTHING\\)?$",
+      "arrow_type": "Null"
+    }
+  ]
+}

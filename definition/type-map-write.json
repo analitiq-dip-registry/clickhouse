@@ -1,42 +1,161 @@
-[
-  { "match": "exact", "canonical": "Boolean", "native": "Bool" },
-
-  { "match": "exact", "canonical": "Int8", "native": "Int8" },
-  { "match": "exact", "canonical": "Int16", "native": "Int16" },
-  { "match": "exact", "canonical": "Int32", "native": "Int32" },
-  { "match": "exact", "canonical": "Int64", "native": "Int64" },
-  { "match": "exact", "canonical": "UInt8", "native": "UInt8" },
-  { "match": "exact", "canonical": "UInt16", "native": "UInt16" },
-  { "match": "exact", "canonical": "UInt32", "native": "UInt32" },
-  { "match": "exact", "canonical": "UInt64", "native": "UInt64" },
-
-  { "match": "exact", "canonical": "Float16", "native": "Float32" },
-  { "match": "exact", "canonical": "Float32", "native": "Float32" },
-  { "match": "exact", "canonical": "Float64", "native": "Float64" },
-
-  { "match": "regex", "canonical": "^Decimal(?:128|256)\\((?<precision>\\d+),\\s*(?<scale>\\d+)\\)$", "native": "Decimal(${precision}, ${scale})" },
-
-  { "match": "exact", "canonical": "Utf8", "native": "String" },
-  { "match": "exact", "canonical": "LargeUtf8", "native": "String" },
-  { "match": "exact", "canonical": "Null", "native": "String" },
-
-  { "match": "exact", "canonical": "Binary", "native": "String" },
-  { "match": "exact", "canonical": "LargeBinary", "native": "String" },
-  { "match": "regex", "canonical": "^FixedSizeBinary\\((?<width>\\d+)\\)$", "native": "FixedString(${width})" },
-
-  { "match": "exact", "canonical": "Date32", "native": "Date32" },
-  { "match": "exact", "canonical": "Date64", "native": "Date32" },
-
-  { "match": "regex", "canonical": "^Timestamp\\(SECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(0, 'UTC')" },
-  { "match": "regex", "canonical": "^Timestamp\\(MILLISECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(3, 'UTC')" },
-  { "match": "regex", "canonical": "^Timestamp\\(MICROSECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(6, 'UTC')" },
-  { "match": "regex", "canonical": "^Timestamp\\(NANOSECOND(?:,\\s*[^)]+)?\\)$", "native": "DateTime64(9, 'UTC')" },
-
-  { "match": "regex", "canonical": "^Time32\\((?:SECOND|MILLISECOND)\\)$", "native": "Int32" },
-  { "match": "regex", "canonical": "^Time64\\((?:MICROSECOND|NANOSECOND)\\)$", "native": "Int64" },
-  { "match": "regex", "canonical": "^Duration\\((?:SECOND|MILLISECOND|MICROSECOND|NANOSECOND)\\)$", "native": "Int64" },
-
-  { "match": "exact", "canonical": "Json", "native": "String" },
-  { "match": "exact", "canonical": "Object", "native": "String" },
-  { "match": "exact", "canonical": "List", "native": "String" }
-]
+{
+  "$schema": "https://schemas.analitiq.ai/type-map-write/latest.json",
+  "direction": "write",
+  "rules": [
+    {
+      "match": "exact",
+      "native_type": "Bool",
+      "arrow_type": "Boolean"
+    },
+    {
+      "match": "exact",
+      "native_type": "Int8",
+      "arrow_type": "Int8"
+    },
+    {
+      "match": "exact",
+      "native_type": "Int16",
+      "arrow_type": "Int16"
+    },
+    {
+      "match": "exact",
+      "native_type": "Int32",
+      "arrow_type": "Int32"
+    },
+    {
+      "match": "exact",
+      "native_type": "Int64",
+      "arrow_type": "Int64"
+    },
+    {
+      "match": "exact",
+      "native_type": "UInt8",
+      "arrow_type": "UInt8"
+    },
+    {
+      "match": "exact",
+      "native_type": "UInt16",
+      "arrow_type": "UInt16"
+    },
+    {
+      "match": "exact",
+      "native_type": "UInt32",
+      "arrow_type": "UInt32"
+    },
+    {
+      "match": "exact",
+      "native_type": "UInt64",
+      "arrow_type": "UInt64"
+    },
+    {
+      "match": "exact",
+      "native_type": "Float32",
+      "arrow_type": "Float16"
+    },
+    {
+      "match": "exact",
+      "native_type": "Float32",
+      "arrow_type": "Float32"
+    },
+    {
+      "match": "exact",
+      "native_type": "Float64",
+      "arrow_type": "Float64"
+    },
+    {
+      "match": "regex",
+      "native_type": "Decimal(${precision}, ${scale})",
+      "arrow_type": "^Decimal(?:128|256)\\((?<precision>\\d+),\\s*(?<scale>\\d+)\\)$"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "Utf8"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "LargeUtf8"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "Null"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "Binary"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "LargeBinary"
+    },
+    {
+      "match": "regex",
+      "native_type": "FixedString(${width})",
+      "arrow_type": "^FixedSizeBinary\\((?<width>\\d+)\\)$"
+    },
+    {
+      "match": "exact",
+      "native_type": "Date32",
+      "arrow_type": "Date32"
+    },
+    {
+      "match": "exact",
+      "native_type": "Date32",
+      "arrow_type": "Date64"
+    },
+    {
+      "match": "regex",
+      "native_type": "DateTime64(0, 'UTC')",
+      "arrow_type": "^Timestamp\\(SECOND(?:,\\s*[^)]+)?\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "DateTime64(3, 'UTC')",
+      "arrow_type": "^Timestamp\\(MILLISECOND(?:,\\s*[^)]+)?\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "DateTime64(6, 'UTC')",
+      "arrow_type": "^Timestamp\\(MICROSECOND(?:,\\s*[^)]+)?\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "DateTime64(9, 'UTC')",
+      "arrow_type": "^Timestamp\\(NANOSECOND(?:,\\s*[^)]+)?\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "Int32",
+      "arrow_type": "^Time32\\((?:SECOND|MILLISECOND)\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "Int64",
+      "arrow_type": "^Time64\\((?:MICROSECOND|NANOSECOND)\\)$"
+    },
+    {
+      "match": "regex",
+      "native_type": "Int64",
+      "arrow_type": "^Duration\\((?:SECOND|MILLISECOND|MICROSECOND|NANOSECOND)\\)$"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "Json"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "Object"
+    },
+    {
+      "match": "exact",
+      "native_type": "String",
+      "arrow_type": "List"
+    }
+  ]
+}
